@@ -16,6 +16,20 @@
         <div class="alert alert-info">
             <p>Fields marked with <i class="fa fa-asterisk text-danger"></i> (asterisk) are required.</p>
         </div>
+        <?php if(preset($data, 'status', '') === 'd'):?>
+          <div class="callout callout-warning">
+          This proposal has been declined for the reason:
+          <p><b><?= $data['decline_reason']?></b></p>
+          </div>
+        <?php elseif(preset($data, 'status', '') === 'p'):?>
+           <div class="callout callout-info">
+            This proposal is still pending for approval.
+            </div>
+        <?php else:?>
+            <div class="callout callout-success">
+              This proposal is approved!
+            </div>
+        <?php endif;?>
         <div class="alert alert-danger hidden">
             <ul class="list-unstyled"></ul>
         </div>
@@ -66,8 +80,11 @@
         </div>
       </div><!-- /.box-body -->
       <div class="box-footer clearfix">
+        
         <a href="<?= "{$url}/track_proposals" ?>" class="btn btn-default cancel pull-right btn-flat">Cancel</a>
-        <button type="submit" class="btn btn-success btn-flat">Submit</button>
+        <?php if(preset($data, 'status', '') === 'p'):?>
+          <button type="submit" class="btn btn-success btn-flat">Submit</button>
+        <?php endif;?>
       </div><!-- /.box-footer -->
     </form>
   </div>

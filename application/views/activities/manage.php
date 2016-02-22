@@ -51,6 +51,14 @@
             <input type="number" class="form-control" name="population" min="1" value="<?= preset($data, 'population', '')?>"/>
           </div>
         </div>
+        <?php if(user_type(USER_TYPE_SUPERUSER)):?>
+          <div class="form-group">
+            <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> Facilitators limit</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" name="facilitator_limit" min="2" value="<?= preset($data, 'facilitator_limit', '')?>"/>
+            </div>
+          </div>
+        <?php endif;?>
         <hr>
         <div class="form-group">
           <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> Nature</label>

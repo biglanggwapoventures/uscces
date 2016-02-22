@@ -2,7 +2,6 @@
 <section class="content-header">
     <h1>
         Facilitators
-        <small>View, create, update and delete facilitators</small>
         <a href="<?= "{$url}/create" ?>" class="btn btn-flat btn-default  btn-sm pull-right"><i class="fa fa-plus"></i> New facilitator</a>
     </h1>
 

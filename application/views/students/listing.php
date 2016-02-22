@@ -2,7 +2,6 @@
 <section class="content-header">
   <h1>
     Students
-    <small>View, create, update and delete student info</small>
     <a href="<?= "{$url}/create"?>" class="btn btn-flat btn-default  btn-sm pull-right"><i class="fa fa-plus"></i> New student</a>
   </h1>
  
@@ -18,8 +17,7 @@
             <th>Course</th>
             <th>Yr Lvl</th>
             <th>CES status</th>
-            
-            <th></th>
+            <th class="text-right"><a data-toggle="modal" data-target="#search" class="btn btn-info btn-xs btn-flat" href="javascript:void(0)"><i class="fa fa-search"> Search</i></a></th>
       		</tr>
   		</thead>
         <tbody>
@@ -50,6 +48,9 @@
               </td>
             </tr>
         <?php endforeach;?>
+        <?php if(empty($items)):?>
+          <tr><td colspan="6" class="text-center">No results found.</td></tr>
+        <?php endif;?>
       </tbody>
       </table>
     </div><!-- /.box-body -->
@@ -72,6 +73,75 @@
         <a class="btn btn-info btn-flat" id="confirm-button">Yes</a>
         <a data-dismiss="modal" class="btn btn-default btn-flat">Go back</a>
     </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="search" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel1">Search students</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label>Firstname</label>
+                <input class="form-control" name="firstname" type="text" value="<?= $this->input->get('firstname') ?>"/>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label>Middlename</label>
+                <input class="form-control" name="middlename" type="text" value="<?= $this->input->get('middlename') ?>"/>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label>Lastname</label>
+                <input class="form-control" name="lastname" type="text" value="<?= $this->input->get('lastname') ?>"/>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label>ID Number</label>
+                <input class="form-control" name="id_number" type="text" value="<?= $this->input->get('id_number') ?>"/>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label>Year level</label>
+                <input class="form-control" type="number" min="1" max="4" name="year_level" value="<?= $this->input->get('year_level') ?>"/>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label>Course</label>
+                <?= form_dropdown('course', ['' => '', 'it' => 'BS IT', 'ict' => 'BS ICT', 'cs' => 'BS CS'], $this->input->get('course'), 'class="form-control"')?>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label>Status</label>
+                <?= form_dropdown('status', ['' => '', 0 => 'Lacking', 1 => 'Completed'], $this->input->get('status'), 'class="form-control"')?>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer clearfix">
+          <button class="pull-left btn btn-default btn-flat" type="reset">Reset fields</button>
+          <button class="btn btn-success btn-flat" type="submit">Search</button>
+          <a data-dismiss="modal" class="btn btn-default btn-flat">Cancel</a>
+        </div>
+      </form>
     </div>
   </div>
 </div>

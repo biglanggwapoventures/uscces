@@ -6,6 +6,8 @@ class Activities extends CES_Controller
     protected $tab_title = 'Activities';
     protected $active_nav = NAV_ADM_ACTIVITIES;
 
+    protected $id;
+
     public function __construct()
     {
         parent::__construct();
@@ -100,7 +102,8 @@ class Activities extends CES_Controller
             $this->json_response(['result' => FALSE, 'messages' => ['Please choose an activity to update.']]);
             return;
         }
-        $this->_perform_validation();
+        $this->id = $id;
+        $this->_perform_validation(ACTION_UPDATE);
         if(!$this->form_validation->run()){
             $this->json_response(['result' => FALSE, 'messages' => array_values($this->form_validation->error_array())]);
             return;
@@ -207,17 +210,19 @@ class Activities extends CES_Controller
         }
     }
 
-    public function _perform_validation()
+    public function _perform_validation($action = ACTION_CREATE)
     {
         $this->form_validation->set_rules('name', 'name', 'required');
         $this->form_validation->set_rules('description', 'description', 'required');
         $this->form_validation->set_rules('location', 'location', 'required');
         $this->form_validation->set_rules('datetime', 'date and time', 'callback__validate_datetime');
         $this->form_validation->set_rules('population', 'population', 'required|integer|greater_than[0]');
+        $this->form_validation->set_rules('facilitator_limit', 'facilitators max limit', 'callback__validate_facilitator_limit');
         $this->form_validation->set_rules('nature_id', 'nature of the activity', 'callback__validate_nature_id');
         $this->form_validation->set_rules('area_id', 'area of the activity', 'callback__validate_area_id');
         $this->form_validation->set_rules('status', 'status', 'required|in_list[a,d,p]', ['in_list' => 'Please choose a %s.']);
         $this->form_validation->set_rules('decline_reason', 'decline reason', 'callback__validate_decline_reason');
+        $this->form_validation->set_rules('facilitate', '', "callback__validate_facilitate[{$action}]");
     }
 
     public function _format_data($action = ACTION_CREATE)
@@ -227,6 +232,9 @@ class Activities extends CES_Controller
         $data['datetime'] = date('Y-m-d H:i:s', strtotime($this->input->post('datetime')));
         if($data['status'] === 'd'){
             $data['decline_reason'] = $this->input->post('decline_reason');
+        }
+        if(user_type(USER_TYPE_SUPERUSER)){
+            $data['facilitator_limit'] = $this->input->post('facilitator_limit');
         }
         if($action === ACTION_CREATE){
             $data['type'] = 'a';
@@ -269,4 +277,25 @@ class Activities extends CES_Controller
         } 
         return TRUE;
     }
+
+    public function _validate_facilitator_limit($limit)
+    {
+        if(user_type(USER_TYPE_SUPERUSER)){
+            $this->form_validation->set_message('_validate_facilitator_limit', 'The %s should be equal or greater than 2');
+            return is_numeric($limit) && $limit >= 2;
+        }
+        return TRUE;
+    }
+
+    public function _validate_facilitate($facilitate, $action)
+    {
+        if(!$facilitate || $action === ACTION_CREATE || user_type(USER_TYPE_SUPERUSER)){
+            return TRUE;
+        }
+        $this->form_validation->set_message('_validate_facilitate', 'Unable to %s this activity. Facilitators has reached max limit.');
+        $limit = $this->activity->get_facilitators_max_count($this->id);
+        $faci_count = $this->activity->get_facilitators_count($this->id, pk());
+        return $faci_count < $limit;
+    }
+
 }

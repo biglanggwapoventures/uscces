@@ -9,20 +9,27 @@ class Profile extends CES_Controller
 	{
 		parent::__construct();
 		$this->tabt_title = 'My Status';
-		$this->active_nav = NAV_USR_STATUS;
+		
 		$this->load->model(['User_model' => 'user', 'Activity_model' => 'activity']);
 	}
 
 	public function index()
 	{	
 		$this->user->id = $this->input->get('id');
+		// determine if user is accessing his own profile or an is trying to access another profile
 		if(($this->session->userdata('type') == 's' && $this->session->userdata('id') != $this->user->id) || !$this->user->exists()){
 			show_404();
+		}
+		$user = $this->user->get();
+		if($this->user->id != pk()){
+			$this->active_nav = $user['type'] === USER_TYPE_STUDENT ? NAV_ADM_STUDENTS : NAV_ADM_FACI;
+		}else{
+			$this->active_nav = NAV_USR_STATUS;
 		}
 		$this->import_plugin_script('bootstrap-datepicker/js/bootstrap-datepicker.min.js');
 		$this->import_page_script('profile.js');
 		$this->generate_page('profile', [
-			'user' => $this->user->get(),
+			'user' => $user,
 			'proposed_count' => $this->activity->get_proposed_count($this->user->id),
 			'attended' => $this->activity->get_attended($this->user->id)
 		]);

@@ -41,5 +41,11 @@
 		$('#confirm').on('hide.bs.modal', function(e){
 			$('#confirm-btn').unbind();
 		});
+
+		$('[type=reset]').click(function(e){
+			e.preventDefault();
+
+			$(this).closest('form').find('input,select').val('');
+		});
 	});
 })(jQuery)

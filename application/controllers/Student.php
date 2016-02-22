@@ -122,6 +122,7 @@ class Student extends CES_Controller
 		if(!$id || !$activity = $this->activity->view_proposed($this->user_id, $id)){
             show_404();
         }
+        $this->active_nav = NAV_USR_TRACK_PROPOSALS;
         $this->import_plugin_script([
             'bootstrap-wysiwyg/bootstrap3-wysihtml5.all.min.js', 
             'moment.min.js', 

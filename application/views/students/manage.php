@@ -2,7 +2,6 @@
 <section class="content-header">
   <h1>
     Students
-    <small>View, create, update and delete student info</small>
   </h1>
  
 </section>

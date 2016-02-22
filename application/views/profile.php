@@ -35,17 +35,18 @@
 
         </div><!-- /.box-body -->
       </div><!-- /.box -->
-
-      <!-- About Me Box -->
-      <div class="box box-solid">
-        <div class="box-header with-border">
-          <h3 class="box-title">About Me</h3>
-        </div><!-- /.box-header -->
-        <div class="box-body">
-          <strong><i class="fa fa-file-text-o margin-r-5"></i> Talent</strong>
-          <p><?= $user['talent'] ? $user['talent'] : '<em>None</em>'?></p>
-        </div><!-- /.box-body -->
-      </div><!-- /.box -->
+       <?php if($user['type'] === USER_TYPE_STUDENT):?>
+        <!-- About Me Box -->
+        <div class="box box-solid">
+          <div class="box-header with-border">
+            <h3 class="box-title">About Me</h3>
+          </div><!-- /.box-header -->
+          <div class="box-body">
+            <strong><i class="fa fa-file-text-o margin-r-5"></i> Talent</strong>
+            <p><?= $user['talent'] ? $user['talent'] : '<em>None</em>'?></p>
+          </div><!-- /.box-body -->
+        </div><!-- /.box -->
+      <?php endif;?>
     </div><!-- /.col -->
     <div class="col-md-9">
       <div class="nav-tabs-custom">
@@ -64,7 +65,7 @@
             <form class="form-horizontal" data-action="<?= base_url("profile/update/{$user['id']}")?>">
               <!-- ID NUMBER -->
               <div class="form-group">
-                <label class="col-sm-2 control-label">ID #</label>
+                <label class="col-sm-2 control-label">ID Number</label>
                 <div class="col-sm-9">
                   <p class="form-control-static"><?= $user['username']?></p>
                 </div>
@@ -212,12 +213,14 @@
                 </div>
               </div>
               <hr>
-              <div class="form-group">
-                <label for="talents" class="col-sm-2 control-label">Talent</label>
-                <div class="col-sm-9">
-                  <textarea class="form-control" id="talents" name="talent"><?= $user['talent']?></textarea>
+              <?php if($user['type'] === USER_TYPE_STUDENT):?>
+                <div class="form-group">
+                  <label for="talents" class="col-sm-2 control-label">Talent</label>
+                  <div class="col-sm-9">
+                    <textarea class="form-control" id="talents" name="talent"><?= $user['talent']?></textarea>
+                  </div>
                 </div>
-              </div>
+              <?php endif;?>
               <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                   <button type="submit" class="btn btn-success btn-flat">Submit</button>

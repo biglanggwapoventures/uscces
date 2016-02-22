@@ -14,10 +14,40 @@ class Students extends CES_Controller
 
     public function index()
     {
+        $search = $this->_get_search_params();
         $this->import_page_script('student-listing.js');
         $this->generate_page('students/listing', [
-            'items' => $this->student->all()
+            'items' => $this->student->all($search['params'], $search['wildcards'])
         ]);
+    }
+
+    public function _get_search_params()
+    {
+        $params = [];
+        $wildcards = [];
+        $search = elements(['year_level', 'course', 'status', 'id_number', 'firstname', 'lastname', 'middlename'], $this->input->get());
+        if($search['year_level']){
+            $params['year_level'] = $search['year_level'];
+        }
+        if($search['course']){
+            $params['course'] = $search['course'];
+        }
+        if($search['status']){
+            $params['status'] = $search['status'];
+        }
+        if($search['id_number']){
+            $params['username'] = $search['id_number'];
+        }
+        if($search['firstname']){
+            $wildcards['firstname'] = $search['firstname'];
+        }
+        if($search['lastname']){
+            $wildcards['lastname'] = $search['lastname'];
+        }
+        if($search['middlename']){
+            $wildcards['middlename'] = $search['middlename'];
+        }
+        return compact(['params', 'wildcards']);
     }
 
     public function create()

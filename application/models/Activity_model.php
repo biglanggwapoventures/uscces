@@ -266,4 +266,22 @@ class Activity_model extends CI_Model
 
 		return $activities;
 	}
+
+	public function get_facilitators_max_count($id)
+	{
+		$result = $this->db->select('facilitator_limit AS limit')->from($this->table)->where('id', $id)->get()->row_array();
+		return $result ? $result['limit'] : NULL;
+	}
+
+	public function get_facilitators_count($id, $except = FALSE)
+	{
+		$this->db->select('COUNT(ap.user_id) AS num', FALSE)->from('activity_participants AS ap');
+		$this->db->join('users AS u', 'u.id = ap.user_id');
+		$this->db->where(['ap.activity_id' => $id, 'u.type' => 'f']);
+		if($except){
+			$this->db->where('ap.user_id !=', $except);
+		}
+		$faci = $this->db->get()->row_array();
+		return $faci ? $faci['num'] : NULL;
+	}
 }

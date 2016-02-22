@@ -21,10 +21,16 @@ class Student_model extends CI_Model
         
     }
 
-    public function all()
+    public function all($params = NULL, $wildcards = NULL)
     {
         $this->db->select('id, username, firstname, middlename, lastname, year_level, course, status, is_locked');
         $this->db->from($this->table)->where('type', 's');
+        if($params){
+            $this->db->where($params);        
+        }
+        if($wildcards){
+            $this->db->like($wildcards);        
+        }
         return $this->db->order_by('lastname', 'ASC')->get()->result_array();
     }
 

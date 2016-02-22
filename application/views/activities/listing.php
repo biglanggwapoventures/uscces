@@ -22,7 +22,13 @@
                 <tbody>
                     <?php foreach($items AS $row):?>
                         <tr data-pk="<?= $row['id']?>">
-                            <td><a href="<?="{$url}/view_participants/{$row['id']}"?>"><?= $row['name']?></a></td>
+                            <td>
+                                <?php if($row['status'] === 'a'):?>
+                                    <a href="<?="{$url}/view_participants/{$row['id']}"?>"><?= $row['name']?></a>
+                                <?php else:?>
+                                    <?= $row['name']?>
+                                <?php endif;?>
+                            </td>
                             <td><?= date('d-M-Y h:i a', strtotime($row['datetime']))?></td>
                             <td><?= "" ?></td>
                             <td><?= "{$row['student_count']}/{$row['population']}"?></td>
