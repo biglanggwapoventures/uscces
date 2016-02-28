@@ -108,3 +108,8 @@ define('ACTION_CREATE', 'c');
 define('USER_TYPE_FACILITATOR', 'f');
 define('USER_TYPE_SUPERUSER', 'su');
 define('USER_TYPE_STUDENT', 's');
+
+define('APPROVED_ACTIVITIES', 'approved');
+define('PAST_ACTIVITIES', 'past');
+define('PROPOSED_ACTIVITIES', 'proposed');
+define('DECLINED_ACTVITIES', 'declined');

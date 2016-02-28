@@ -21,6 +21,7 @@
     <link rel="stylesheet" type="text/css" href="<?= base_url('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css')?>" />
     <link rel="stylesheet" type="text/css" href="<?= base_url('assets/plugins/bootstrap-wysiwyg/bootstrap3-wysihtml5.min.css')?>" />
     <link rel="stylesheet" type="text/css" href="<?= base_url('assets/plugins/bootstrap-datetimepicker/bs-datetimepicker.min.css')?>" />
+    <link rel="stylesheet" type="text/css" href="<?= base_url('assets/plugins/select2/select2.min.css')?>" />
     
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -115,6 +116,8 @@
     <?= plugin_script('slimScroll/jquery.slimscroll.min.js')?>
     <!-- FastClick -->
     <?= plugin_script('fastclick/fastclick.min.js')?>
+    <!-- Print -->
+    <?= plugin_script('printer.js')?>
     <!-- AdminLTE App -->
     <?= script('app.min.js')?>
 
@@ -132,7 +135,13 @@
         <?php endforeach;?>
     <?php endif;?>
 
-
+    <script type="text/javascript">
+      (function($){
+        $(document).ready(function(){
+          $('#print-students-list').printPage();
+        })
+      })(jQuery)
+    </script>
 
   </body>
 </html>

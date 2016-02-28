@@ -16,7 +16,7 @@
                         <th>Population</th>
                         <th>Created by</th>
                         <th>Status</th>
-                        <th class="text-center"><a href="javascript:void(0)" data-toggle="modal" data-target="#advanced-search"><i class="fa fa-search"></i> Search</a></th>
+                        <th class="text-right"><a href="javascript:void(0)" class="btn btn-xs btn-flat btn-info" data-toggle="modal" data-target="#advanced-search"><i class="fa fa-search"></i> Search</a></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -72,29 +72,31 @@
             <div class="modal-header">
                 <h4 class="modal-title" id="myModalLabel1">Advanced search</h4>
             </div>
-            <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" name="name" class="form-control"/>
-                    </div>
-                    <div class="form-group">
-                        <label>Date &amp; time start</label>
-                        <input type="text" name="datetime_start" class="form-control"/>
-                    </div>
-                    <div class="form-group">
-                        <label>Date &amp; time end</label>
-                        <input type="text" name="datetime_end" class="form-control"/>
-                    </div>
-                     <div class="form-group">
-                        <label>Status</label>
-                        <?= form_dropdown('status', ['' => '', 'a' => 'Approved', 'p' => 'Pending', 'd' => 'Declined'], '', 'class="form-control"')?>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer hidden">
-                <button type="button" class="btn btn-outline" data-dismiss="modal">Close</button>
-            </div>
+            <form method="GET" action="<?= current_url()?>">
+                <div class="modal-body">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" name="name" class="form-control" value="<?= $this->input->get('name')?>"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Search date start</label>
+                            <input type="text" name="start_date" class="form-control datepicker" value="<?= $this->input->get('start_date')?>"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Search date end</label>
+                            <input type="text" name="end_date" class="form-control datepicker" value="<?= $this->input->get('end_date')?>"/>
+                        </div>
+                         <div class="form-group">
+                            <label>Status</label>
+                            <?= form_dropdown('category', ['' => '-ALL ACTIVITIES-', APPROVED_ACTIVITIES => 'Approved activities', PAST_ACTIVITIES => 'Past activities', PROPOSED_ACTIVITIES => 'Pending proposals', DECLINED_ACTVITIES => 'Declined proposals'], $this->input->get('category'), 'class="form-control"')?>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success btn-flat">Search</button>
+                    <button type="reset" class="btn btn-default btn-flat">Reset</button>
+                    <button type="button" class="btn btn-default btn-flat" data-dismiss="modal">Close</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>   

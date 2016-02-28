@@ -21,15 +21,15 @@ if(!function_exists('course_dropdown'))
 
 if(!function_exists('course'))
 {
-	function course($code)
+	function course($code, $reduced = FALSE)
 	{
 		switch ($code) {
 			case 'ict':
-				return 'B.S. Information and Communications Technology';
+				return $reduced ? 'BS ICT' : 'B.S. Information and Communications Technology';
 			case 'it':
-				return 'B.S. Information Technology';
+				return $reduced ? 'BS IT' : 'B.S. Information Technology';
 			case 'cs':
-				return 	'B.S. Computer Science';
+				return $reduced ? 'BS CS' : 'B.S. Computer Science';
 			default:
 				return '';
 		}

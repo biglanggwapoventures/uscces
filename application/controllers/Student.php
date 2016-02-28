@@ -79,8 +79,8 @@ class Student extends CES_Controller
         $today = date_create(date('Y-m-d'));
         $activity_date = date_create(date('Y-m-d', strtotime($result['datetime'])));
         $diff = date_diff($today, $activity_date)->format('%a');
-        if($diff <= 3){
-            $this->json_response(['result' => FALSE, 'messages' => ['Failed to leave activity.']]);
+        if((int)$diff <= 3){
+            $this->json_response(['result' => FALSE, 'messages' => ['Failed to leave: Activity starts at '.$diff.' days from now']]);
             return;
         }
 

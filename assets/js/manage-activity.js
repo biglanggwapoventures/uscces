@@ -41,6 +41,7 @@
 			$('textarea[name=decline_reason]').attr('disabled', 'disabled').closest('.form-group').addClass('hidden');
 			$('input[name=facilitate]').removeAttr('disabled');
 		});
+		
 
 	})
 })(jQuery)

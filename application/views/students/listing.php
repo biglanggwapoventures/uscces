@@ -15,41 +15,35 @@
   					<th>ID #</th>
   					<th>Full name</th>
             <th>Course</th>
-            <th>Yr Lvl</th>
             <th>CES status</th>
             <th class="text-right"><a data-toggle="modal" data-target="#search" class="btn btn-info btn-xs btn-flat" href="javascript:void(0)"><i class="fa fa-search"> Search</i></a></th>
       		</tr>
   		</thead>
         <tbody>
-        <?php foreach($items AS $row):?>
-            <tr data-pk="<?= $row['id']?>">
-                <td><a href="<?= base_url("profile/?id={$row['id']}")?>"> <?= $row['username'] ?> </a></td>
-              <td> <?= "{$row['lastname']}, {$row['firstname']} {$row['middlename']}" ?> </td>
-              <td> 
-              <?php if($row['course'] === 'it'):?>
-                  B.S. Information Technology
-              <?php elseif($row['course'] === 'ict'):?>
-                B.S. Information and Communications Technology
-              <?php elseif($row['course'] === 'cs'):?>
-                 B.S. Computer Science
-              <?php endif;?>
-              </td>
-              <td> <?= $row['year_level'] ?> </td>
-              <td>
-                <?php if($row['status']):?>
-                  <span class="label label-success"><i class="fa fa-check"></i> Cleared</span>
-                <?php else:?>
-                  <span class="label label-warning"><i class="fa fa-exclamation-circle"></i> Lacking</span>
-                <?php endif;?>
-              </td> 
-              
-              <td>
-                  <a data-target="#confirm" data-toggle="modal" href="javascript:void(0)" class="text-info"><i class="fa fa-refresh"></i> Reset PW</a>
-              </td>
-            </tr>
-        <?php endforeach;?>
-        <?php if(empty($items)):?>
-          <tr><td colspan="6" class="text-center">No results found.</td></tr>
+        <?php if(isset($items) && is_array($items)):?>
+          <?php foreach($items AS $row):?>
+              <tr data-pk="<?= $row['id']?>">
+                  <td><a href="<?= base_url("profile/?id={$row['id']}")?>"> <?= $row['username'] ?> </a></td>
+                <td> <?= "{$row['lastname']}, {$row['firstname']} {$row['middlename']}" ?> </td>
+                <td> <?= course($row['course'], TRUE).'-'.$row['year_level']?></td>
+                <td>
+                  <?php if($row['status']):?>
+                    <span class="label label-success"><i class="fa fa-check"></i> Cleared</span>
+                  <?php else:?>
+                    <span class="label label-warning"><i class="fa fa-exclamation-circle"></i> Lacking</span>
+                  <?php endif;?>
+                </td> 
+                <td>
+                    <a data-target="#confirm" data-toggle="modal" href="javascript:void(0)" class="text-info"><i class="fa fa-refresh"></i> Reset PW</a>
+                </td>
+              </tr>
+          <?php endforeach;?>
+          <?php if(empty($items)):?>
+            <tr><td colspan="6" class="text-center">No results found</td></tr>
+          <?php endif;?>
+        <?php endif;?>
+        <?php if(!isset($items)):?>
+          <tr><td colspan="6" class="text-center">Click on search at the top to start.</td></tr>
         <?php endif;?>
       </tbody>
       </table>

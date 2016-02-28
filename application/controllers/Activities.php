@@ -17,11 +17,37 @@ class Activities extends CES_Controller
         $this->load->model('Activity_model', 'activity');
     }
 
+    public function _search_params()
+    {
+        $search = [];
+        $wildcards = [];
+        $category = '';
+        $params = elements(['name', 'start_date', 'end_date', 'category'], $this->input->get(), NULL);
+        if($params['name']){
+            $wildcards['a.name'] = $params['name'];
+        }
+        if($params['start_date'] && is_valid_date($params['start_date'], 'm/d/Y')){
+            $search['DATE(a.datetime) >='] = date('Y-m-d', strtotime($params['start_date']));
+        }
+        if($params['end_date'] && is_valid_date($params['end_date'], 'm/d/Y')){
+            $search['DATE(a.datetime) <='] = date('Y-m-d', strtotime($params['end_date']));
+        }
+        if($params['end_date']){
+            $wildcards['name'] = $params['name'];
+        }
+        if($params['category'] && in_array($params['category'], [APPROVED_ACTIVITIES, PAST_ACTIVITIES, DECLINED_ACTVITIES, PROPOSED_ACTIVITIES])){
+            $category = $params['category'];
+        }
+        return compact(['search', 'wildcards', 'category']);
+    }
+
     public function index()
     {
+        $this->import_plugin_script('bootstrap-datepicker/js/bootstrap-datepicker.min.js');
         $this->import_page_script('activity-listing.js');
+        $params = $this->_search_params();
         $this->generate_page('activities/listing', [
-            'items' => $this->activity->all()
+            'items' => $this->activity->set_category($params['category'])->all($params['search'], $params['wildcards'])
         ]); 
     }
 
@@ -45,7 +71,8 @@ class Activities extends CES_Controller
         $this->import_plugin_script([
             'bootstrap-wysiwyg/bootstrap3-wysihtml5.all.min.js', 
             'moment.min.js', 
-            'bootstrap-datetimepicker/bs-datetimepicker.min.js'
+            'bootstrap-datetimepicker/bs-datetimepicker.min.js',
+            'select2/select2.min.js'
         ]);
         $this->import_page_script('manage-activity.js');
         $this->generate_page('activities/manage', [
@@ -82,7 +109,8 @@ class Activities extends CES_Controller
         $this->import_plugin_script([
             'bootstrap-wysiwyg/bootstrap3-wysihtml5.all.min.js', 
             'moment.min.js', 
-            'bootstrap-datetimepicker/bs-datetimepicker.min.js'
+            'bootstrap-datetimepicker/bs-datetimepicker.min.js',
+            'select2/select2.min.js'
         ]);
         $this->import_page_script('manage-activity.js');
         $this->generate_page('activities/manage', [

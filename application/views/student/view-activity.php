@@ -60,7 +60,7 @@
                    <?php $today = date_create(date('Y-m-d'));?>
                    <?php $activity_date = date_create(date('Y-m-d', strtotime($data['datetime'])));?>
                    <?php $diff = date_diff($today, $activity_date)->format('%a')?>
-                   <?php if($diff >= 3):?>
+                   <?php if($diff > 3):?>
                       <a id="leave" data-pk="<?= $data['id']?>" data-action-url="<?= "{$url}/leave_activity"?>" class="btn btn-danger btn-flat"><i class="fa fa-minus-circle"></i> Leave this activity
                    <?php endif;?>
                   <?php else:?>

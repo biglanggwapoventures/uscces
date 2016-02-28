@@ -7,12 +7,12 @@ class Activity_model extends CI_Model
 
 	public function program_areas()
 	{
-		return $this->db->select('id,name')->from('activity_program_areas')->get()->result_array();
+		return $this->db->select('*')->from('activity_program_areas')->get()->result_array();
 	}
 
 	public function program_natures()
 	{
-		return $this->db->select('id,name')->from('activity_program_natures')->get()->result_array();
+		return $this->db->select('*')->from('activity_program_natures')->get()->result_array();
 	}
 
 	public function has_valid_program_area($id)
@@ -55,7 +55,14 @@ class Activity_model extends CI_Model
 		])->row_array();
 	}
 
-	public function all()
+	/*
+	* 	1. Active
+	*	2. Past
+	*	3. Proposed
+	*	4. Declined
+	*	5. All
+	*/
+	public function all($params = NULL, $wildcards = NULL)
 	{
 		$this->db->select('a.*, CONCAT(u.lastname, ", ", u.firstname, " ", u.middlename) AS created_by, '.
 			' COUNT(CASE WHEN pu.type = "s" THEN ap.user_id ELSE NULL END) AS student_count', FALSE);
@@ -63,9 +70,37 @@ class Activity_model extends CI_Model
 		$this->db->join('activity_participants AS ap', 'ap.activity_id = a.id', 'left');
 		$this->db->join('users AS pu', 'pu.id = ap.user_id', 'left');
 		$this->db->join('users AS u', 'u.id = a.created_by');
+		if($params){
+			$this->db->where($params);
+		}
+		if($wildcards){
+			$this->db->like($wildcards);
+		}
 		$this->db->group_by('a.id');
 		$this->db->order_by('a.datetime', 'DESC');
 		return $this->db->get()->result_array();
+	}
+
+	public function set_category($category)
+	{
+		switch($category)
+		{
+			case APPROVED_ACTIVITIES: 
+				$this->db->where("DATE(a.datetime) >= CURDATE()", FALSE, FALSE);
+				$this->db->where('a.status', 'a');
+				break;
+			case PAST_ACTIVITIES: 
+				$this->db->where("DATE(a.datetime) < CURDATE()", FALSE, FALSE);
+				$this->db->where('a.status', 'a');
+				break;
+			case PROPOSED_ACTIVITIES: 
+				$this->db->where(['a.type' => 'p', 'a.status' => 'p']);
+				break;
+			case DECLINED_ACTVITIES: 
+				$this->db->where(['a.type' => 'p', 'a.status' => 'd']);
+				break;
+		}
+		return $this;
 	}
 
 	public function create($data, $facilitate = FALSE)

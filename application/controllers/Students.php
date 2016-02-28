@@ -16,9 +16,11 @@ class Students extends CES_Controller
     {
         $search = $this->_get_search_params();
         $this->import_page_script('student-listing.js');
-        $this->generate_page('students/listing', [
-            'items' => $this->student->all($search['params'], $search['wildcards'])
-        ]);
+        $data = FALSE;
+        if($this->input->get()){
+            $data['items'] = $this->student->all($search['params'], $search['wildcards']);
+        }
+        $this->generate_page('students/listing', $data);
     }
 
     public function _get_search_params()
@@ -126,6 +128,13 @@ class Students extends CES_Controller
             return;
         }
         $this->json_response(['result' => FALSE, 'messages' => ['Cannot perform action due to an unknown. Please try again later.']]);
+    }
+
+    public function print_master_list()
+    {
+        $this->load->view('students/master-list-print', [
+            'list' => $this->student->all()
+        ]);
     }
 
     public function _perform_validation($action = ACTION_CREATE)

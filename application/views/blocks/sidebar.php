@@ -36,14 +36,18 @@
                 <li class="<?= $active_nav === NAV_ADM_STUDENTS ? 'active' : '' ?>"><a href="<?= "{$url}students" ?>"><i class="fa fa-graduation-cap"></i> <span>Students</span></a></li>
                 <li class="<?= $active_nav === NAV_ADM_FACI ? 'active' : '' ?>"><a href="<?= "{$url}facilitators" ?>"><i class="fa fa-user-secret"></i> <span>Facilitators</span></a></li>
                 <li class="<?= $active_nav === NAV_ADM_ACTIVITIES ? 'active' : '' ?>"><a href="<?= "{$url}activities" ?>"><i class="fa fa-newspaper-o"></i> <span>Activities</span></a></li>
-                <li class="<?= $active_nav === NAV_USR_STATUS ? 'active' : '' ?>">
-                    <a href="<?= "{$url}profile?id=".pk()?>"><i class="fa fa-user"></i> <span>My Account</span></a>
+                <li>
+                    <a href="<?= "{$url}students/print_master_list"?>" id="print-students-list"><i class="fa fa-list"></i> <span>Print Student List</span></a>
                 </li>
+                <li>
+                    <a data-href="<?= "{$url}profile?id=".pk()?>"><i class="fa fa-user"></i> <span>My Account</span></a>
+                </li>
+
             <?php elseif($this->session->userdata('type') === 'f'):?>
                 <li class="header">FACILITATORS PANEL</li>
                 <li class="<?= $active_nav === NAV_ADM_ACTIVITIES ? 'active' : '' ?>"><a href="<?= "{$url}activities" ?>"><i class="fa fa-newspaper-o"></i> <span>Activities</span></a></li>
                 <li class="<?= $active_nav === NAV_USR_STATUS ? 'active' : '' ?>">
-                    <a href="<?= "{$url}profile?id=".pk()?>"><i class="fa fa-user"></i> <span>My Account</span></a>
+                    <a href="<?= "{$url}profile?id=".pk()?>" ><i class="fa fa-user"></i> <span>My Account</span></a>
                 </li>
             <?php else:?>
                 <li class="header">STUDENTS PANEL</li>

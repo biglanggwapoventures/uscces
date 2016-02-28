@@ -61,15 +61,31 @@
         <?php endif;?>
         <hr>
         <div class="form-group">
-          <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> Nature</label>
-          <div class="col-sm-8">
-            <?= form_dropdown('nature_id', ['' => ''] + array_column($program_natures, 'name', 'id'), preset($data, 'nature_id', ''), 'class="form-control"')?>
+          <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> Nature of the activity</label>
+          <div class="col-sm-10">
+              <?php foreach($program_natures AS $row):?>
+                <?php $selected = '';?>
+                <?php if(preset($data, 'nature_id', '') === $row['id']):?>
+                     <?php $selected = 'checked="checked"';?>
+                <?php endif;?>
+                <div class="radio">
+                  <label><input type="radio" name="nature_id" value="<?= $row['id']?>" <?= $selected?>><?= "<strong>{$row['name']}</strong> <em>{$row['description']}</em>"?></label>
+                </div>
+              <?php endforeach;?>
           </div>
         </div>
         <div class="form-group">
-          <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> Area</label>
-          <div class="col-sm-8">
-            <?= form_dropdown('area_id', ['' => ''] + array_column($program_areas, 'name', 'id'), preset($data, 'area_id', ''), 'class="form-control"')?>
+          <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> Area of the activity</label>
+          <div class="col-sm-10">
+              <?php foreach($program_areas AS $row):?>
+                <?php $selected = '';?>
+                <?php if(preset($data, 'area_id', '') === $row['id']):?>
+                     <?php $selected = 'checked="checked"';?>
+                <?php endif;?>
+                <div class="radio">
+                  <label><input type="radio" name="area_id" value="<?= $row['id']?>" <?= $selected?>><?= "<strong>{$row['name']}</strong>"?></label>
+                </div>
+              <?php endforeach;?>
           </div>
         </div>
         <hr>
