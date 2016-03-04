@@ -145,7 +145,7 @@ class Activity_model extends CI_Model
 
 	public function get_participants($id)
 	{
-		$this->db->select('u.id, u.username, CONCAT(u.lastname, ", ", u.firstname, " ", u.middlename) AS fullname, u.status, ap.contact_number', FALSE);
+		$this->db->select('u.id, u.username, CONCAT(u.lastname, ", ", u.firstname, " ", u.middlename) AS fullname, u.status, ap.contact_number, u.lastname, u.firstname, u.middlename', FALSE);
 		$this->db->from('activity_participants AS ap');
 		$this->db->join('users AS u', 'u.id = ap.user_id', 'left', FALSE);
 		$this->db->where('u.type', 's');
@@ -197,7 +197,7 @@ class Activity_model extends CI_Model
 	}
 
 	// view activity
-	public function view_activity($id)
+	public function view_activity($id, $active_only = TRUE)
 	{
 		$this->db->select('a.*, apn.name AS nature, apa.name AS area, '.
 			'COUNT(CASE WHEN u.type = "s" THEN ap.user_id ELSE NULL END) AS student_count', FALSE);
@@ -205,8 +205,11 @@ class Activity_model extends CI_Model
 		$this->db->join('activity_participants AS ap', 'ap.activity_id = a.id', 'left');
 		$this->db->join('users AS u', 'u.id = ap.user_id', 'left');
 		$this->db->where('a.nature_id = apn.id AND a.area_id = apa.id', FALSE, FALSE);
-		$this->db->where("DATE(a.datetime) >= CURDATE()", FALSE, FALSE);
-		$this->db->where(['a.status' => 'a', 'a.id' => $id]);	
+		if($active_only){
+			$this->db->where("DATE(a.datetime) >= CURDATE()", FALSE, FALSE);
+			$this->db->where(['a.status' => 'a']);
+		}	
+		$this->db->where(['a.id' => $id]);	
 		return $this->db->get()->row_array();
 	}
 
@@ -294,7 +297,7 @@ class Activity_model extends CI_Model
 			return [];
 		}
 
-		$this->db->select('name, datetime, location', FALSE)->from($this->table);
+		$this->db->select('name, datetime, location, id', FALSE)->from($this->table);
 		$this->db->where('status', 'a')->where('DATE(`datetime`) < CURDATE()', FALSE, FALSE);
 		$this->db->where_in('id', array_column($result, 'activity_id'));
 		$activities = $this->db->get()->result_array();
@@ -318,5 +321,24 @@ class Activity_model extends CI_Model
 		}
 		$faci = $this->db->get()->row_array();
 		return $faci ? $faci['num'] : NULL;
+	}
+
+	public function is_finished($id)
+	{
+		$this->db->select('id')->where('datetime < now()');
+		return $this->db->get_where($this->table, ['id' => $id])->num_rows() > 0;
+	}
+
+	public function sample()
+	{
+		$data = [];
+		for($x = 10; $x<60; $x++){
+			$data[] = [
+				'user_id' => $x,
+				'activity_id' => 2
+			];
+		}
+
+		$this->db->insert_batch('activity_participants', $data);
 	}
 }

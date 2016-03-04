@@ -89,19 +89,21 @@
           </div>
         </div>
         <hr>
+        <?php $status = preset($data, 'status', ''); ?>
+        <?php if(user_type(USER_TYPE_SUPERUSER)):?>
         <div class="form-group">
-          <?php $status = preset($data, 'status', ''); ?>
           <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> Status</label>
           <div class="col-sm-8">
             <?= form_dropdown('status', ['' => '', 'a' => 'Approved', 'p' => 'Pending', 'd' => 'Declined'], $status, 'class="form-control"')?>
           </div>
         </div>
-        <div class="form-group <?= $status !== 'd' ? 'hidden' : ''?>">
-          <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> Reason for declining</label>
-          <div class="col-sm-8">
-            <textarea class="form-control" name="decline_reason" <?= $status !== 'd' ? 'disabled="disabled"' : ''?>><?= preset($data, 'decline_reason', '')?></textarea>
+          <div class="form-group <?= $status !== 'd' ? 'hidden' : ''?>">
+            <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> Reason for declining</label>
+            <div class="col-sm-8">
+              <textarea class="form-control" name="decline_reason" <?= $status !== 'd' ? 'disabled="disabled"' : ''?>><?= preset($data, 'decline_reason', '')?></textarea>
+            </div>
           </div>
-        </div>
+        <?php endif;?>
         <div class="form-group">
           <label class="col-sm-2 control-label">&nbsp;</label>
           <div class="col-sm-8">

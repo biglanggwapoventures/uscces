@@ -15,18 +15,6 @@
                 <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
             </div>
         </div>
-
-        <!-- search form (Optional) -->
-        <form action="#" method="get" class="sidebar-form">
-            <div class="input-group">
-                <input type="text" name="q" class="form-control" placeholder="Search for activities...">
-                <span class="input-group-btn">
-                    <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
-                </span>
-            </div>
-        </form>
-        <!-- /.search form -->
-
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu">
             <?php if($this->session->userdata('type') === 'su'):?>
@@ -37,10 +25,10 @@
                 <li class="<?= $active_nav === NAV_ADM_FACI ? 'active' : '' ?>"><a href="<?= "{$url}facilitators" ?>"><i class="fa fa-user-secret"></i> <span>Facilitators</span></a></li>
                 <li class="<?= $active_nav === NAV_ADM_ACTIVITIES ? 'active' : '' ?>"><a href="<?= "{$url}activities" ?>"><i class="fa fa-newspaper-o"></i> <span>Activities</span></a></li>
                 <li>
-                    <a href="<?= "{$url}students/print_master_list"?>" id="print-students-list"><i class="fa fa-list"></i> <span>Print Student List</span></a>
+                    <a href="<?= "{$url}students/print_master_list"?>" class="print-page"><i class="fa fa-list"></i> <span>Print Student List</span></a>
                 </li>
-                <li>
-                    <a data-href="<?= "{$url}profile?id=".pk()?>"><i class="fa fa-user"></i> <span>My Account</span></a>
+                <li class="<?= $active_nav === NAV_USR_STATUS ? 'active' : '' ?>">
+                    <a href="<?= "{$url}profile?id=".pk()?>"><i class="fa fa-user"></i> <span>My Account</span></a>
                 </li>
 
             <?php elseif($this->session->userdata('type') === 'f'):?>

@@ -248,18 +248,21 @@ class Activities extends CES_Controller
         $this->form_validation->set_rules('facilitator_limit', 'facilitators max limit', 'callback__validate_facilitator_limit');
         $this->form_validation->set_rules('nature_id', 'nature of the activity', 'callback__validate_nature_id');
         $this->form_validation->set_rules('area_id', 'area of the activity', 'callback__validate_area_id');
-        $this->form_validation->set_rules('status', 'status', 'required|in_list[a,d,p]', ['in_list' => 'Please choose a %s.']);
+        $this->form_validation->set_rules('status', 'status', 'callback__validate_status');
         $this->form_validation->set_rules('decline_reason', 'decline reason', 'callback__validate_decline_reason');
         $this->form_validation->set_rules('facilitate', '', "callback__validate_facilitate[{$action}]");
     }
 
     public function _format_data($action = ACTION_CREATE)
     {
-        $data = elements(['name', 'description', 'location', 'population', 'nature_id', 'area_id', 'status'], $this->input->post());
+        $data = elements(['name', 'description', 'location', 'population', 'nature_id', 'area_id'], $this->input->post());
         // set formatted date for timestamp data type
         $data['datetime'] = date('Y-m-d H:i:s', strtotime($this->input->post('datetime')));
-        if($data['status'] === 'd'){
-            $data['decline_reason'] = $this->input->post('decline_reason');
+        if(user_type(USER_TYPE_SUPERUSER)){
+            $data['status'] = $this->input->post('status');
+            if($data['status'] === 'd'){
+                $data['decline_reason'] = $this->input->post('decline_reason');
+            }
         }
         if(user_type(USER_TYPE_SUPERUSER)){
             $data['facilitator_limit'] = $this->input->post('facilitator_limit');
@@ -276,6 +279,16 @@ class Activities extends CES_Controller
             ]
         ];
     }
+
+    public function _validate_status($status)
+    {   
+        if($status){
+            $this->form_validation->set_message('_validate_status', 'You are not allowed to set activity status.');
+            return user_type(USER_TYPE_SUPERUSER) && in_array($status, ['d', 'a', 'p']);
+        }
+        return TRUE;
+    }
+
 
     public function _validate_datetime($datetime)
     {

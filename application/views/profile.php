@@ -16,6 +16,7 @@
           <img class="profile-user-img img-responsive img-circle" src="<?= base_url('assets/img/display-photo-placeholder.png')?>" alt="User profile picture">
           <h3 class="profile-username text-center"><?= "{$user['firstname']} {$user['middlename']} {$user['lastname']}" ?></h3>
           <ul class="list-group list-group-unbordered">
+          <?php if($user['type'] === USER_TYPE_STUDENT):?>
             <li class="list-group-item">
               <b>Status</b> 
               <?php if($user['status'] ):?>
@@ -24,6 +25,7 @@
               <a class="pull-right"><span class="label label-danger"><i class="fa fa-times"></i> Lacking</span></a>
               <?php endif;?>
             </li>
+          <?php endif;?>
             <li class="list-group-item">
               <b>CES Attended</b> <a class="pull-right"><?= count($attended)?></a>
             </li>
@@ -239,6 +241,12 @@
                     <td><?= $row['name']?></td>
                     <td><?= date('d-M-Y H:i a', strtotime($row['datetime']))?></td>
                     <td><?= $row['location']?></td>
+                    <td>
+                      <a href="<?= base_url("printables/certificate/{$row['id']}/{$user['id']}")?>" class="btn btn-xs btn-success btn-flat print-page">Certificate</a>
+                      <?php if( in_array(user_type(), [USER_TYPE_SUPERUSER, USER_TYPE_FACILITATOR]) ):?>
+                       <a href="<?= base_url("printables/form/{$row['id']}")?>" class="btn btn-xs btn-info btn-flat print-page">Form</a>
+                      <?php endif;?>
+                    </td>
                   </tr>
                 <?php endforeach;?>
                 <?php if(!$attended):?>

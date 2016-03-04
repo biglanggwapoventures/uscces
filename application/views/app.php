@@ -102,7 +102,7 @@
           Ortega &amp; Igot
         </div>
         <!-- Default to the left -->
-        University of San Carlos | CES Pre-enrollment and Tracking System &copy; 2015
+        University of San Carlos | CES Pre-enrollment and Tracking System &copy; 2016
       </footer>
     </div><!-- ./wrapper -->
 
@@ -138,7 +138,7 @@
     <script type="text/javascript">
       (function($){
         $(document).ready(function(){
-          $('#print-students-list').printPage();
+          $('.print-page').printPage();
         })
       })(jQuery)
     </script>
