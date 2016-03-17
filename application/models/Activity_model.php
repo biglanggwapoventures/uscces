@@ -114,7 +114,7 @@ class Activity_model extends CI_Model
 				$this->db->where('a.status', 'a');
 				break;
 			case PAST_ACTIVITIES: 
-				$this->db->where("DATE(a.datetime) < CURDATE()", FALSE, FALSE);
+				$this->db->where("datetime < NOW()", FALSE, FALSE);
 				$this->db->where('a.status', 'a');
 				break;
 			case PROPOSED_ACTIVITIES: 
