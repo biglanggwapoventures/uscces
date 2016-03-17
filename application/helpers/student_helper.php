@@ -35,3 +35,13 @@ if(!function_exists('user_type')){
 		return $CI->session->userdata('type');
 	}
 }
+
+if(!function_exists('ces_status')){
+	function ces_status($user_id = FALSE)
+	{
+		$user = $user_id ?: pk();
+ 		$CI =& get_instance();
+		$CI->load->model('Student_model', 'student');
+		return $CI->student->is_cleared($user);
+	}
+}

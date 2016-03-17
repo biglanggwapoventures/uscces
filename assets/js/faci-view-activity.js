@@ -2,10 +2,10 @@
 	$(document).ready(function(){
 		$('#leave').click(function(){
 
-			if(!confirm('Are you sure you want to leave this activity?')){
+			if(!confirm('Are you sure you want to stop facilitating this activity?')){
 				return;
 			}
-			
+
 			var that = $(this),
 				id = that.data('pk');
 
@@ -26,22 +26,23 @@
 		});
 
 		$('#join').click(function(){
+
+			if(!confirm('Are you sure you want to facilitate this activity?')){
+				return;
+			}
+
 			var that = $(this),
-				id = that.data('pk'),
-				modal = that.closest('.modal'),
-				msgBox = modal.find('.alert-danger'),
-				mobile = modal.find('input[name=mobile]').val()
+				id = that.data('pk');
 
 			that.addClass('disabled');
-			msgBox.addClass('hidden');
 
-			$.post(that.data('action-url'), {id:id,mobile:mobile})
+			$.post(that.data('action-url'), {id:id})
 			.done(function(response){
 				if(response.result){
 					window.location.reload();
 					return;
 				}
-				msgBox.removeClass('hidden').find('ul').html('<li>'+response.messages.join('</li><li>')+'</li>');
+				that.after($('<p />', {'class':'text-center text-danger', text : response.messages[0]}).fadeOut('slow'));
 				that.removeClass('disabled');
 			})
 			.fail(function(){

@@ -78,7 +78,31 @@ class Activity_model extends CI_Model
 		}
 		$this->db->group_by('a.id');
 		$this->db->order_by('a.datetime', 'DESC');
-		return $this->db->get()->result_array();
+		$result = $this->db->get()->result_array();
+
+		if(!$result){
+			return [];
+		}
+
+		$facilitators = $this->db->select('CONCAT(u.lastname, ", ", u.firstname, " ", u.middlename) AS name, ap.activity_id', FALSE)
+			->from('activity_participants AS ap')
+			->join('users AS u', 'u.id = ap.user_id', FALSE)
+			->where(['u.type !=' => 's'])
+			->where_in('ap.activity_id', array_column($result, 'id'))
+			->get()
+			->result_array();
+
+		if(!$facilitators){
+			return [];
+		}
+
+		$result = array_column($result, NULL, 'id');
+
+		foreach($facilitators AS $row){
+			$result[$row['activity_id']]['facilitators'][] = $row['name'];
+		}
+
+		return $result;
 	}
 
 	public function set_category($category)
@@ -327,6 +351,72 @@ class Activity_model extends CI_Model
 	{
 		$this->db->select('id')->where('datetime < now()');
 		return $this->db->get_where($this->table, ['id' => $id])->num_rows() > 0;
+	}
+
+	public function area_stats()
+	{
+		$areas = $this->db->get('activity_program_areas')->result_array();
+
+		$this->db->select('COUNT(id) AS total, area_id')
+			->from($this->table)
+			->where('status', 'a')
+			->where('datetime < NOW()')
+			->group_by('area_id')
+			->order_by('total', 'DESC');
+
+		$total = array_column($this->db->get()->result_array(), 'total', 'area_id');
+
+		foreach($areas AS &$area){
+			$area['total'] = isset($total[$area['id']]) ? $total[$area['id']]: 0;
+		}
+
+		return $areas;
+	}
+
+	public function nature_stats()
+	{
+		$natures = $this->db->get('activity_program_natures')->result_array();
+
+		$this->db->select('COUNT(id) AS total, nature_id')
+			->from($this->table)
+			->where('status', 'a')
+			->where('datetime < NOW()')
+			->group_by('nature_id')
+			->order_by('total', 'DESC');
+
+		$total = array_column($this->db->get()->result_array(), 'total', 'nature_id');
+
+		foreach($natures AS &$nature){
+			$nature['total'] = isset($total[$nature['id']]) ? $total[$nature['id']]: 0;
+		}
+
+		return $natures;
+	}
+
+	public function get_total_count()
+	{
+		$result = $this->db->select('COUNT(id) AS total')
+			->from($this->table)
+			->where('status', 'a')
+			->where('datetime < NOW()')
+			->get()
+			->row_array();
+		return $result ? $result['total'] : 0;
+	}
+
+	public function get_unique_participants_count()
+	{
+		$result = $this->db->select('COUNT(DISTINCT u.id) AS total, u.type')
+			->from('activity_participants AS ap')
+			->join('users AS u', 'u.id = ap.user_id')
+			->join('activities AS a', 'a.id = ap.activity_id')
+			->where('a.status', 'a')
+			->where('a.datetime < NOW()')
+			->group_by('u.type')
+			->get()
+			->result_array();
+
+		return array_column($result, 'total', 'type');
 	}
 
 	public function sample()

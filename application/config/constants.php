@@ -91,6 +91,7 @@ define('NAV_ADM_PROPOSED_ACTIVITIES', 'adm_proposed_activities');
 define('NAV_ADM_STUDENTS', 'adm_students');
 define('NAV_ADM_FACI', 'faci');
 define('NAV_ADM_ACTIVITIES', 'activities');
+define('NAV_ADM_STATISTICS', 'stats');
 
 define('NAV_USR_VIEW_ACTIVITIES', 'usr_view_activities');
 define('NAV_USR_PROPOSE_ACTIVITIES', 'usr_propose_activities');
@@ -113,3 +114,5 @@ define('APPROVED_ACTIVITIES', 'approved');
 define('PAST_ACTIVITIES', 'past');
 define('PROPOSED_ACTIVITIES', 'proposed');
 define('DECLINED_ACTVITIES', 'declined');
+
+define('MAX_FACI_LIMIT_PER_ACTIVITY', 2);

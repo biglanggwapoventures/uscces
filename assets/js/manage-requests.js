@@ -39,6 +39,11 @@
 		});
 
 		$('.process-one').click(function(){
+
+			if(!confirm('Confirm action')){
+				return;
+			}
+
 			var that = $(this),
 				action = that.data('action'),
 				url = getUrl(action),
@@ -48,6 +53,11 @@
 		});
 
 		$('.process-multiple').click(function(){
+
+			if(!confirm('Confirm action')){
+				return;
+			}
+
 			var that = $(this),
 				action = that.data('action'),
 				url = getUrl(action),

@@ -11,7 +11,8 @@
                 <thead>
                     <tr>
                         <th>Name</th>   
-                        <th>Date &amp; time</th>
+                        <th>Starts at</th>
+                        <th>Ends at</th>
                         <th>Facilitators</th>
                         <th>Population</th>
                         <th>Created by</th>
@@ -29,8 +30,15 @@
                                     <?= $row['name']?>
                                 <?php endif;?>
                             </td>
-                            <td><?= date('d-M-Y h:i a', strtotime($row['datetime']))?></td>
-                            <td><?= "" ?></td>
+                            <td><?= format_date($row['start_datetime'], 'd-M-Y h:i a')?></td>
+                            <td><?= format_date($row['datetime'], 'd-M-Y h:i a')?></td>
+                            <td>
+                                <?php if(isset($row['facilitators'])):?>
+                                    <?= implode($row['facilitators'], ',<br>')?>
+                                <?php else:?>
+                                    -
+                                <?php endif;?>
+                            </td>
                             <td><?= "{$row['student_count']}/{$row['population']}"?></td>
                             <td><?= $row['created_by']?></td>
                             <td>
@@ -42,7 +50,15 @@
                                     <span class="label label-danger">Declined</span>
                                 <?php endif;?>
                             </td>
-                            <td><a href="<?= "{$url}/edit/{$row['id']}"?>" class="btn btn-xs btn-flat btn-info" ><i class="fa fa-pencil"></i> Edit</a></td>
+                            <td>
+                                <?php if(user_type(USER_TYPE_SUPERUSER)):?>
+                                    <a href="<?= "{$url}/edit/{$row['id']}"?>" class="btn btn-xs btn-flat btn-info" ><i class="fa fa-pencil"></i> Edit
+                                    </a>
+                                <?php else:?>
+                                     <a href="<?= "{$url}/view/{$row['id']}"?>" class="btn btn-xs btn-flat btn-info" ><i class="fa fa-eye"></i> View
+                                    </a>
+                                <?php endif;?>
+                            </td>
                         </tr>
                     <?php endforeach;?>
                 </tbody>

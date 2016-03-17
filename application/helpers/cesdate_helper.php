@@ -9,3 +9,8 @@ function is_valid_date($date, $format = 'Y-m-d') {
                 return $d && $d->format($format) == $var;
             }) === $date;
 }
+
+function format_date($date, $format = 'd-M-Y')
+{
+	return date_create($date)->format($format);
+}

@@ -12,12 +12,20 @@
             <div class="pull-left info">
                 <p><?= user_id_number() ?></p>
                 <!-- Status -->
-                <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                <?php if(user_type(USER_TYPE_STUDENT)):?>
+                    <?php if(ces_status()):?>
+                        <a><i class="fa fa-check text-success"></i> Cleared</a>
+                    <?php else:?>
+                        <a><i class="fa fa-times text-danger"></i> Lacking</a>
+                    <?php endif;?>
+                <?php else:?>
+                    <a href="#"><i class="fa fa-check text-success"></i> Cleared</a>
+                <?php endif;?>
             </div>
         </div>
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu">
-            <?php if($this->session->userdata('type') === 'su'):?>
+            <?php if(user_type(USER_TYPE_SUPERUSER)):?>
             
                 <li class="header">ADMINISTRATORS PANEL</li>
                 <!-- Optionally, you can add icons to the links -->
@@ -30,8 +38,11 @@
                 <li class="<?= $active_nav === NAV_USR_STATUS ? 'active' : '' ?>">
                     <a href="<?= "{$url}profile?id=".pk()?>"><i class="fa fa-user"></i> <span>My Account</span></a>
                 </li>
+                <li class="<?= $active_nav === NAV_ADM_STATISTICS ? 'active' : '' ?>">
+                    <a href="<?= "{$url}statistics"?>"><i class="fa fa-bar-chart"></i> <span>Statistics</span></a>
+                </li>
 
-            <?php elseif($this->session->userdata('type') === 'f'):?>
+            <?php elseif(user_type(USER_TYPE_FACILITATOR)):?>
                 <li class="header">FACILITATORS PANEL</li>
                 <li class="<?= $active_nav === NAV_ADM_ACTIVITIES ? 'active' : '' ?>"><a href="<?= "{$url}activities" ?>"><i class="fa fa-newspaper-o"></i> <span>Activities</span></a></li>
                 <li class="<?= $active_nav === NAV_USR_STATUS ? 'active' : '' ?>">

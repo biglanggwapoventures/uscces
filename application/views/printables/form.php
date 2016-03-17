@@ -38,7 +38,7 @@
 				<tr><td>Last Name</td><td >First Name</td><td  class="text-center">Middle Initial</td></tr>
 				<?php $participants_count = count($participants);?>
 
-				<?php $num = 32;?>
+				<?php $num = 20;?>
 				<?php $diff = 0;?>
 				
 				<?php if($participants_count > $num):?>
@@ -70,7 +70,7 @@
 								</dl>
 							</td>
 						<?php elseif($x === 11):?>
-							<td rowspan="<?= 25 + $diff?>" style="vertical-align: top">Please write the outline below with detailed Outline of Program/Project/Activity of your CES:</td>
+							<td rowspan="<?= 9 + $diff?>" style="vertical-align: top">Please write the outline below with detailed Outline of Program/Project/Activity of your CES:</td>
 						<?php endif;?>
 						<td><?= isset($participants[$x]['lastname']) ? $participants[$x]['lastname'] : '&nbsp;' ?></td>
 						<td><?= isset($participants[$x]['firstname']) ? $participants[$x]['firstname'] : '&nbsp;' ?></td>
@@ -80,7 +80,7 @@
 			</table>
 		</div>
 	</div>
-	<div class="row address" style="<?= $num > 32 ? 'margin-top:20px': 'position: fixed;bottom: 0'?>">
+	<div class="row address" style="<?= $num > 20 ? 'margin-top:20px': 'position: fixed;bottom: 0'?>">
 		<div class="col-xs-3">
 			Noted by:
 			<address>

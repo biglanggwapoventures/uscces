@@ -16,7 +16,7 @@
   					<th>Full name</th>
             <th>Course</th>
             <th>CES status</th>
-            <th class="text-right"><a data-toggle="modal" data-target="#search" class="btn btn-info btn-xs btn-flat" href="javascript:void(0)"><i class="fa fa-search"> Search</i></a></th>
+            <th class="text-right"><a data-toggle="modal" data-target="#search" class="btn btn-info btn-xs btn-flat" href="javascript:void(0)"><i class="fa fa-search"></i> Search</a></th>
       		</tr>
   		</thead>
         <tbody>

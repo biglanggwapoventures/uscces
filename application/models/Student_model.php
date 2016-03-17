@@ -76,6 +76,12 @@ class Student_model extends CI_Model
         return $this->db->update($this->table);
     }
 
+    public function is_cleared($id)
+    {
+        $result = $this->db->select('status')->get_where($this->table, ['id' => $id])->row_array();
+        return $result ? (bool)intval($result['status']) : FALSE;
+    }
+
     public function has_active_activity($id)
     {
         $this->db->select('a.name');

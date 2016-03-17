@@ -20,7 +20,7 @@ class Student extends CES_Controller
 	{
 		$this->active_nav = NAV_USR_VIEW_ACTIVITIES;
 		$this->generate_page('student/list-activities', [
-			'items' => $this->activity->get_approved()
+			'items' => $this->activity->set_category(APPROVED_ACTIVITIES)->all()
 		]);
 	}
 
@@ -34,7 +34,8 @@ class Student extends CES_Controller
 		$this->generate_page('student/view-activity', [
 			'data' => $activity,
 			'is_participant' => $this->activity->has_participant_with_id($id, $this->user_id),
-            'facilitators' => $this->activity->get_facilitators($id)
+            'facilitators' => $this->activity->get_facilitators($id),
+            'facilitators_count' => $this->activity->get_facilitators($id),
 		]);
 	}
 

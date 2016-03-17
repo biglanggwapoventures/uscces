@@ -66,6 +66,20 @@ class Activities extends CES_Controller
 
     }
 
+    public function view($id = FALSE)
+    {
+        if(!$id || !$activity = $this->activity->view_activity($id, FALSE)){
+            show_404();
+        }
+        $this->import_page_script('faci-view-activity.js');
+        $this->generate_page('activities/view', [
+            'data' => $activity,
+            'is_participant' => $this->activity->has_participant_with_id($id, pk()),
+            'facilitators' => $this->activity->get_facilitators($id),
+            'facilitators_count' => $this->activity->get_facilitators_count($id),
+        ]);
+    }
+
     public function create()
     {
         $this->import_plugin_script([
@@ -238,14 +252,43 @@ class Activities extends CES_Controller
         }
     }
 
+
+    public function join_activity()
+    {
+        $this->form_validation->set_rules('id', '', 'required|callback__validate_activity');
+        if(!$this->form_validation->run()){
+            $this->json_response(['result' => FALSE, 'messages' => array_values($this->form_validation->error_array())]);
+            return;
+        }
+        if($this->activity->join($this->input->post('id'), pk())){
+            $this->json_response(['result' => TRUE]);
+            return;
+        }
+        $this->json_response(['result' => FALSE, 'messages' => ['Cannot perform action due to an unknown error. Please try again later.']]);
+    }
+
+    public function leave_activity()
+    {
+        $id = $this->input->post('id');
+        if(!$this->activity->has_participant_with_id($id, pk())){
+            $this->json_response(['result' => FALSE, 'messages' => ['You are not in the activity.']]);
+            return;
+        }
+        if($this->activity->leave($id, pk())){
+            $this->json_response(['result' => TRUE]);
+            return;
+        }
+        $this->json_response(['result' => FALSE, 'messages' => ['Cannot perform action due to an unknown error. Please try again later.']]);
+    }
+
     public function _perform_validation($action = ACTION_CREATE)
     {
         $this->form_validation->set_rules('name', 'name', 'required');
         $this->form_validation->set_rules('description', 'description', 'required');
         $this->form_validation->set_rules('location', 'location', 'required');
-        $this->form_validation->set_rules('datetime', 'date and time', 'callback__validate_datetime');
+        $this->form_validation->set_rules('start_datetime', 'start date and time', 'callback__validate_datetime');
+        $this->form_validation->set_rules('datetime', 'end date and time', 'callback__validate_datetime');
         $this->form_validation->set_rules('population', 'population', 'required|integer|greater_than[0]');
-        $this->form_validation->set_rules('facilitator_limit', 'facilitators max limit', 'callback__validate_facilitator_limit');
         $this->form_validation->set_rules('nature_id', 'nature of the activity', 'callback__validate_nature_id');
         $this->form_validation->set_rules('area_id', 'area of the activity', 'callback__validate_area_id');
         $this->form_validation->set_rules('status', 'status', 'callback__validate_status');
@@ -257,7 +300,8 @@ class Activities extends CES_Controller
     {
         $data = elements(['name', 'description', 'location', 'population', 'nature_id', 'area_id'], $this->input->post());
         // set formatted date for timestamp data type
-        $data['datetime'] = date('Y-m-d H:i:s', strtotime($this->input->post('datetime')));
+        $data['datetime'] = date_create($this->input->post('datetime'))->format('Y-m-d H:i:s');
+        $data['start_datetime'] = date_create($this->input->post('start_datetime'))->format('Y-m-d H:i:s');
         if(user_type(USER_TYPE_SUPERUSER)){
             $data['status'] = $this->input->post('status');
             if($data['status'] === 'd'){
@@ -293,7 +337,7 @@ class Activities extends CES_Controller
     public function _validate_datetime($datetime)
     {
         $this->load->helper('cesdate');
-        $this->form_validation->set_message('_validate_datetime', 'Please input a valid datetime with format: m/d/Y hh:mm AM/PM');
+        $this->form_validation->set_message('_validate_datetime', 'Please input a valid %s with format: m/d/Y hh:mm AM/PM');
         return $datetime && is_valid_date($datetime, 'm/d/Y h:i A');
     }
 
@@ -319,14 +363,6 @@ class Activities extends CES_Controller
         return TRUE;
     }
 
-    public function _validate_facilitator_limit($limit)
-    {
-        if(user_type(USER_TYPE_SUPERUSER)){
-            $this->form_validation->set_message('_validate_facilitator_limit', 'The %s should be equal or greater than 2');
-            return is_numeric($limit) && $limit >= 2;
-        }
-        return TRUE;
-    }
 
     public function _validate_facilitate($facilitate, $action)
     {
@@ -334,9 +370,18 @@ class Activities extends CES_Controller
             return TRUE;
         }
         $this->form_validation->set_message('_validate_facilitate', 'Unable to %s this activity. Facilitators has reached max limit.');
-        $limit = $this->activity->get_facilitators_max_count($this->id);
         $faci_count = $this->activity->get_facilitators_count($this->id, pk());
-        return $faci_count < $limit;
+        return $faci_count < MAX_FACI_LIMIT_PER_ACTIVITY;
+    }
+
+    public function _validate_activity($id)
+    {
+        $this->form_validation->set_message('_validate_activity', 'Activity does not exist.');
+        if($this->activity->exists($id)){
+            $this->form_validation->set_message('_validate_activity', 'Unable to facilitate this activity. Facilitators has reached max limit.');
+            return $this->activity->get_facilitators_count($id) < MAX_FACI_LIMIT_PER_ACTIVITY;
+        }
+        return FALSE;
     }
 
 }
