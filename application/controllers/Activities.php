@@ -309,7 +309,7 @@ class Activities extends CES_Controller
             }
         }
         if(user_type(USER_TYPE_SUPERUSER)){
-            $data['facilitator_limit'] = $this->input->post('facilitator_limit');
+            $data['facilitator_limit'] = MAX_FACI_LIMIT_PER_ACTIVITY;
         }
         if($action === ACTION_CREATE){
             $data['type'] = 'a';
