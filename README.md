@@ -1,0 +1,6 @@
+# uscces
+CES PRE-ENROLLMENT TRACKING SYSTEM
+
+USC BS ICT CAPSTONE PROJECT 2016
+
+by: Joshua Ortega & Jess Igot
